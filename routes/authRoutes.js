@@ -16,9 +16,8 @@ import {
 
 const router = Router();
 
-router.post(
-  "/register",
-  requireFields(
+router.post( "/register", requireFields
+(
     "name",
     "email",
     "password"
@@ -26,18 +25,15 @@ router.post(
   register
 );
 
-router.post(
-  "/login",
-  requireFields(
+router.post( "/login", requireFields
+(
     "email",
     "password"
   ),
   login
 );
 
-router.get(
-  "/me",
-  requireAuth,
+router.get( "/me", requireAuth,
   me
 );
 

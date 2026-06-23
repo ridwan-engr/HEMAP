@@ -8,11 +8,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateToken } from "../utils/jwt.js";
 
-const token =
-  generateToken({
-    userId: User._id,
-    role: User.role
-  });
 
 export const register = asyncHandler(async (req, res) => {
   const {
