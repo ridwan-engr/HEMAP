@@ -1,5 +1,6 @@
 import { Generator } from "../models/Generator.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {Forecast} from "../models/Forecast.js";
 
 export const createForecast =
   asyncHandler(async (req, res) => {

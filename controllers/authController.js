@@ -8,7 +8,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateToken } from "../utils/jwt.js";
 
-
 export const register = asyncHandler(async (req, res) => {
 
   const {
@@ -122,3 +121,4 @@ export const me = asyncHandler(async (req, res) => {
   });
 
 });
+

@@ -31,3 +31,17 @@ export function verifyToken(token) {
   );
 
 }
+
+export function generateRefreshToken(
+  payload
+) {
+
+  return jwt.sign(
+    payload,
+    env.jwtSecret,
+    {
+      expiresIn: "30d"
+    }
+  );
+
+}

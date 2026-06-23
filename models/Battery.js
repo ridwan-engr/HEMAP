@@ -13,9 +13,9 @@ const batterySchema =
 
       soc: Number,
 
-      chargingPower: Number,
+      chargingPowerKW: Number,
 
-      dischargingPower: Number
+      dischargingPowerKW: Number
     },
     {
       timestamps: true
