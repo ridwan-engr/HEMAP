@@ -43,6 +43,13 @@ export const getReport =
         req.params.id
       );
 
+      if (!report) {
+  throw new ApiError(
+    404,
+    "Report not found"
+  );
+}
+
     report.status =
       "resolved";
 

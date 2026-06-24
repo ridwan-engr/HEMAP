@@ -43,10 +43,10 @@ export const resolveFault =
       );
 
     if (!fault) {
-      return res.status(404).json({
-        success: false,
-        message: "Fault not found"
-      });
+      throw new ApiError(
+    404,
+    "Fault not found"
+      );  
     }
 
     fault.status =
