@@ -157,6 +157,14 @@ app.use(
   analyticsRoutes
 );
 
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://https://hemap-remote.onrender.com"
+  ],
+  credentials: true
+}));
+
 /*
 |--------------------------------------------------------------------------
 | Error Handling
