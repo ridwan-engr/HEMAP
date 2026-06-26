@@ -1,28 +1,43 @@
 import mongoose from "mongoose";
 
-const siteSchema =
-  new mongoose.Schema(
-    {
-      siteName: {
-        type: String,
-        required: true
-      },
-
-      location: {
-        type: String
-      },
-
-      capacityKW: {
-        type: Number
-      }
+const siteSchema = new mongoose.Schema(
+  {
+    siteName: {
+      type: String,
+      required: true,
+      trim: true
     },
-    {
-      timestamps: true
-    }
-  );
 
-export const Site =
-  mongoose.model(
-    "Site",
-    siteSchema
-  );
+    location: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    state: {
+      type: String,
+      trim: true
+    },
+
+    latitude: {
+      type: Number
+    },
+
+    longitude: {
+      type: Number
+    },
+
+    siteType: {
+      type: String,
+      default: true
+    }
+  },
+  {
+    timestamps: true
+  }
+);
+
+export const Site = mongoose.model(
+  "Site",
+  siteSchema
+);

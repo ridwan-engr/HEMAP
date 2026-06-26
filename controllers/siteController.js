@@ -3,23 +3,29 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createSite = asyncHandler(async (req, res) => {
-  const site = await Site.create(req.body);
 
-  res.status(201).json({
-    success: true,
-    count: sites.length,
-    site
-  });
-});
+  try {
 
-export const getSites = asyncHandler(async (req, res) => {
-  const sites = await Site.find();
+    console.log(req.body);
 
-  res.json({
-    success: true,
-    count: sites.length,
-    sites
-  });
+    const site = await Site.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      site
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+
 });
 
 export const getSite = asyncHandler(async (req, res) => {
