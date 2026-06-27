@@ -2,7 +2,10 @@ import { Router } from "express";
 
 import {
   createSolarPlant,
-  getSolarPlants
+  getSolarPlants,
+  getSolarPlant,
+  updateSolarPlant,
+  deleteSolarPlant
 } from "../controllers/solarController.js";
 
 import {
@@ -17,10 +20,27 @@ router.get(
   getSolarPlants
 );
 
+router.get(
+  "/:id",
+  requireAuth,
+  getSolarPlant
+);
+
 router.post(
   "/",
   requireAuth,
   createSolarPlant
 );
 
+router.patch(
+  "/:id",
+  requireAuth,
+  updateSolarPlant
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteSolarPlant
+);
 export default router;

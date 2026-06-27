@@ -3,7 +3,9 @@ from "express";
 
 import {createAnalytics, 
     getAnalytics,
-    updateAnalytics
+    updateAnalytics,
+    deleteAnalytics,
+    getAnalytic
 }
 from "../controllers/analyticsController.js";
 
@@ -27,10 +29,21 @@ router.post(
   createAnalytics
 );
 
+router.get(
+  "/:id",
+  requireAuth,
+  getAnalytic
+);
+
 router.patch(
-  "/analytics/:id",
+  "/:id",
   requireAuth,
   updateAnalytics
 );
 
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteAnalytics
+);
 export default router;

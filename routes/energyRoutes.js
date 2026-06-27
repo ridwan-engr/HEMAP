@@ -2,7 +2,10 @@ import { Router } from "express";
 
 import {
   createEnergyRecord,
-  getEnergyRecords
+  getEnergyRecords,
+  getEnergyRecord,
+  updateEnergyRecord,
+  deleteEnergyRecord
 } from "../controllers/energyController.js";
 
 import {
@@ -21,6 +24,24 @@ router.post(
   "/",
   requireAuth,
   createEnergyRecord
+);
+
+router.get(
+  "/:id",
+  requireAuth,
+  getEnergyRecord
+);
+
+router.patch(
+  "/:id",
+  requireAuth,
+  updateEnergyRecord
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteEnergyRecord
 );
 
 export default router;

@@ -19,6 +19,8 @@ router.get("/:id", requireAuth, getForecast);
 
 router.get("/", requireAuth, getForecasts);
 
+router.patch( "/:id", requireAuth, updateForecast);
+
 router.delete("/:id", requireAuth, deleteForecast);
 
 export default router;

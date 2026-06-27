@@ -27,3 +27,58 @@ export const getGenerators =
       generators
     });
   });
+
+  export const getGenerator = asyncHandler(async (req, res) => {
+  
+    const generator = await Generator.findById(req.params.id);
+  
+    if (!generator) {
+      throw new ApiError(404, "Generator not found");
+    }
+  
+    res.status(200).json({
+      success: true,
+      generator
+    });
+
+  
+  });
+
+  export const updateGenerator = asyncHandler(async (req, res) => {
+
+  const generator = await Generator.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!generator) {
+    throw new ApiError(404, "Generator not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Generator updated successfully",
+    generator
+  });
+
+});
+
+// Delete Site
+export const deleteGenerator = asyncHandler(async (req, res) => {
+
+  const generator = await Generator.findByIdAndDelete(req.params.id);
+
+  if (!generator) {
+    throw new ApiError(404, "Generator not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Generator deleted successfully"
+  });
+
+});

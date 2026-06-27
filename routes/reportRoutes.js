@@ -3,7 +3,9 @@ import { Router } from "express";
 import {
   createReport,
   getReports,
-  getReport
+  getReport,
+  updateReport,
+  deleteReport
 } from "../controllers/reportController.js";
 
 import {
@@ -28,6 +30,18 @@ router.post(
   "/",
   requireAuth,
   createReport
+);
+
+router.patch(
+  "/:id",
+  requireAuth,
+  updateReport
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteReport
 );
 
 export default router;

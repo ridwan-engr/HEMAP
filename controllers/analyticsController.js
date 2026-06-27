@@ -29,17 +29,56 @@ export const getAnalytics =
     });
   });
 
-export const updateAnalytics = asyncHandler(async (req, res) => {
-  const analytics =
-    await Analytics.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+  export const getAnalytic = asyncHandler(async (req, res) => {
+      
+        const analytics = await Analytics.findById(req.params.id);
+      
+        if (!analytics) {
+          throw new ApiError(404, "Analytics not found");
+        }
+      
+        res.status(200).json({
+          success: true,
+          analytics
+        });
+    
+      
+      });
 
-  res.json({
+ export const updateAnalytics = asyncHandler(async (req, res) => {
+  const analytics = await Analytics.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!analytics) {
+    throw new ApiError(404, "Analytics not found");
+  }
+
+  res.status(200).json({
     success: true,
-    count: analytics.length,
+    message: "Analytics updated successfully",
     analytics
   });
+
+});
+
+
+export const deleteAnalytics = asyncHandler(async (req, res) => {
+
+  const analytics = await Analytics.findByIdAndDelete(req.params.id);
+
+  if (!analytics) {
+    throw new ApiError(404, "Analytics not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Analytics deleted successfully"
+  });
+
 });

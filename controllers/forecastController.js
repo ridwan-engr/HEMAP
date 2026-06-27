@@ -52,6 +52,29 @@ export const getForecasts =
 
     });
 
+    export const updateForecast = asyncHandler(async (req, res) => {
+    
+      const forecast = await Forecast.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+    
+      if (!forecast) {
+        throw new ApiError(404, "Forecast not found");
+      }
+    
+      res.status(200).json({
+        success: true,
+        message: "Forecast updated successfully",
+        forecast
+      });
+    
+    });
+
     export const deleteForecast =
   asyncHandler(async (req, res) => {
 

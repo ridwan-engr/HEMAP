@@ -67,8 +67,42 @@ export const getReport =
     });
   });
 
-export const resolveReport =
-  asyncHandler(async (req, res) => {
-      report
-    });
+export const updateReport = asyncHandler(async (req, res) => {
+
+  const report = await Report.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!report) {
+    throw new ApiError(404, "Report not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Report updated successfully",
+    report
+  });
+
+});
+
+// Delete Site
+export const deleteReport = asyncHandler(async (req, res) => {
+
+  const report = await Report.findByIdAndDelete(req.params.id);
+
+  if (!report) {
+    throw new ApiError(404, "Report not found");
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Report deleted successfully"
+  });
+
+});
   
