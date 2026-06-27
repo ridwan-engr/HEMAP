@@ -7,6 +7,10 @@ from "../models/Report.js";
 import { asyncHandler }
 from "../utils/asyncHandler.js";
 
+import { ens, recoveryTime,lolp, 
+reliabilityIndex, saifi, saidi, caidi, criticalLoadServed, resilienceIndex
+ } from "../services/analyticsService.js";
+
 export const createReport =
   asyncHandler(async (req, res) => {
 

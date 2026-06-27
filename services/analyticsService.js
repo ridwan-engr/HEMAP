@@ -1,3 +1,5 @@
+import {Report} from "../models/Report.js";
+
 export function ens(
   demand,
   supplied
