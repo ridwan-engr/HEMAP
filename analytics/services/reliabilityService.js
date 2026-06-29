@@ -18,8 +18,8 @@
  * ============================================================
  */
 
-import { Site } from "../../models/site.js";
-import { Fault } from "../../models/fault.js";
+import { Site } from "../../models/Site.js";
+import { FaultLog } from "../../models/FaultLog.js";
 
 import {
 

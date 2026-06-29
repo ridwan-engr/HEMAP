@@ -18,7 +18,7 @@ import {
 
 import {
   requireAuth
-} from "../middleware/authMiddleware.js";
+} from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
@@ -51,8 +51,6 @@ router.delete(
   requireAuth,
   deleteGenerator
 );
-
-const router = Router();
 
 router.get("/", getGeneratorDashboard);
 

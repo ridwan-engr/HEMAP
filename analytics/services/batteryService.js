@@ -20,7 +20,7 @@
  * ============================================================
  */
 
-import { Battery } from "../../models/battery.js";
+import  Battery  from "../../models/Battery.js";
 
 import {
 

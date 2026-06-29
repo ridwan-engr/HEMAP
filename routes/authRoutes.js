@@ -6,13 +6,17 @@ import {
   me
 } from "../controllers/authController.js";
 
-import {
-  requireAuth
-} from "../middleware/authMiddleware.js";
+//import {
+ // requireAuth
+//} from "../middlewares/validateRequest.js";
 
 import {
   requireFields
-} from "../middleware/validateRequest.js";
+} from "../middlewares/validateRequest.js";
+
+import {
+  requireAuth
+} from "../middlewares/authMiddleware.js";
 
 const router = Router();
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import authRoutes from "./authRoutes.js";
 import dashboardRoutes from "./dashboardRoutes.js";
 import analyticsRoutes from "./analyticsRoutes.js";
 import monitoringRoutes from "./monitoringRoutes.js";
@@ -10,10 +11,15 @@ import gridRoutes from "./gridRoutes.js";
 import reliabilityRoutes from "./reliabilityRoutes.js";
 import reportRoutes from "./reportRoutes.js";
 import forecastRoutes from "./forecastRoutes.js";
-import authRoutes from "../auth/authRoutes.js";
 
+// Existing routes (if still required)
+import siteRoutes from "./siteRoutes.js";
+import energyRoutes from "./energyRoutes.js";
+import faultRoutes from "./faultRoutes.js";
 
 const router = Router();
+
+router.use("/auth", authRoutes);
 
 router.use("/dashboard", dashboardRoutes);
 
@@ -35,12 +41,15 @@ router.use("/reports", reportRoutes);
 
 router.use("/forecast", forecastRoutes);
 
-router.use(
+router.use("/faults", faultRoutes);
 
-    "/auth",
+router.use("/reports", reportRoutes);
 
-    authRoutes
 
-);
+// Existing APIs
+
+router.use("/sites", siteRoutes);
+
+router.use("/energy", energyRoutes);
 
 export default router;

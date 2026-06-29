@@ -4,190 +4,178 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
-
-import authRoutes from "./routes/authRoutes.js";
-import siteRoutes from "./routes/siteRoutes.js";
-import solarRoutes from "./routes/solarRoutes.js";
-import batteryRoutes from "./routes/batteryRoutes.js";
-import generatorRoutes from "./routes/generatorRoutes.js";
-import forecastRoutes from "./routes/forecastRoutes.js";
-import energyRoutes from "./routes/energyRoutes.js";
-import faultRoutes from "./routes/faultRoutes.js";
-import reportRoutes from "./routes/reportRoutes.js";
-import gridRoutes from "./routes/gridRoutes.js";
-
-//import analyticsRoutes from "./routes/analyticsRoutes.js";
-
-
-import {
-  notFoundHandler,
-  errorHandler
-} from "./middleware/errorMiddleware.js";
-
 import routes from "./routes/index.js";
 
 import requestLogger from "./middlewares/requestLogger.js";
+import { notFoundHandler } from "./middlewares/errorMiddleware.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 const app = express();
 
-/*
-|--------------------------------------------------------------------------
-| Security Middleware
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+ * Security Middleware
+ * ============================================================
+ */
 
 app.use(helmet());
 
-app.use(
-  cors({
+app.use(cors({
+
     origin: [
-      "http://localhost:5173",
-      "https://hemap-frontend-46ki.onrender.com"
+
+        "http://localhost:5173",
+
+        "https://hemap-frontend-46ki.onrender.com"
+
     ],
+
+    credentials: true,
+
     methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-      "OPTIONS"
+
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+
     ],
+
     allowedHeaders: [
-      "Content-Type",
-      "Authorization"
-    ],
-    credentials: true
-  })
-);
 
-/*
-|--------------------------------------------------------------------------
-| Request Parsing
-|--------------------------------------------------------------------------
-*/
+        "Content-Type",
+        "Authorization"
 
-app.use(express.json());
+    ]
+
+}));
+
+/* ============================================================
+ * Body Parsing
+ * ============================================================
+ */
+
+app.use(express.json({
+
+    limit: "10mb"
+
+}));
+
+app.use(express.urlencoded({
+
+    extended: true,
+
+    limit: "10mb"
+
+}));
+
+/* ============================================================
+ * Performance
+ * ============================================================
+ */
 
 app.use(compression());
 
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
-
-/*
-|--------------------------------------------------------------------------
-| Logging
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+ * Logging
+ * ============================================================
+ */
 
 app.use(morgan("dev"));
 
-/*
-|--------------------------------------------------------------------------
-| Rate Limiting
-|--------------------------------------------------------------------------
-*/
+app.use(requestLogger);
 
-app.use(
-  rateLimit({
+/* ============================================================
+ * Rate Limiting
+ * ============================================================
+ */
+
+app.use(rateLimit({
+
     windowMs: 15 * 60 * 1000,
-    max: 500,
-    message: {
-      success: false,
-      error:
-        "Too many requests. Try again later."
-    }
-  })
-);
 
-/*
-|--------------------------------------------------------------------------
-| Health Check
-|--------------------------------------------------------------------------
-*/
+    max: 500,
+
+    standardHeaders: true,
+
+    legacyHeaders: false,
+
+    message: {
+
+        success: false,
+
+        message: "Too many requests. Please try again later."
+
+    }
+
+}));
+
+/* ============================================================
+ * Root Endpoint
+ * ============================================================
+ */
 
 app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    application:
-      "RMS System",
-    description:
-      "Remote Monitoring System",
-    version: "1.0.0",
-    status: "Running",
-    timestamp:
-      new Date().toISOString()
-  });
+
+    res.status(200).json({
+
+        success: true,
+
+        application: "HEMAP",
+
+        description: "Hybrid Energy Monitoring & Analytics Platform",
+
+        version: "1.0.0",
+
+        status: "Running",
+
+        timestamp: new Date().toISOString()
+
+    });
+
 });
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+ * Health Endpoint
+ * ============================================================
+ */
 
-app.use( "/api/auth", authRoutes );
+app.get("/health", (req, res) => {
 
-app.use(
-  "/api/sites",
-  siteRoutes
-);
+    res.status(200).json({
 
-app.use(
-  "/api/solar",
-  solarRoutes
-);
+        success: true,
 
-app.use(
-  "/api/batteries",
-  batteryRoutes
-);
+        status: "Healthy",
 
-app.use(
-  "/api/generators",
-  generatorRoutes
-);
+        uptime: process.uptime(),
 
-app.use(
-  "/api/forecasts",
-  forecastRoutes
-);
+        timestamp: new Date().toISOString()
 
-app.use(
-  "/api/energy",
-  energyRoutes
-);
+    });
 
-app.use(
-  "/api/faults",
-  faultRoutes
-);
+});
 
-app.use(
-  "/api/reports",
-  reportRoutes
-);
+/* ============================================================
+ * API Gateway
+ * ============================================================
+ */
 
-app.use(
-  "/api/grid",
-  gridRoutes
-);
+app.use("/api", routes);
 
-//app.use( "/api/analytics", analyticsRoutes);
-/*
-|--------------------------------------------------------------------------
-| Error Handling
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+ * 404 Handler
+ * ============================================================
+ */
 
-app.use(
-  notFoundHandler
-);
+app.use(notFoundHandler);
 
-app.use(
-  errorHandler
-);
+/* ============================================================
+ * Global Error Handler
+ * ============================================================
+ */
+
+app.use(errorHandler);
 
 export default app;

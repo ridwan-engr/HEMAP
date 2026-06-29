@@ -16,7 +16,7 @@ import {
 
 import {
   requireAuth
-} from "../middleware/authMiddleware.js";
+} from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
@@ -39,6 +39,5 @@ router.get("/load", getLoadForecast);
 router.get("/battery", getBatteryForecast);
 
 router.get("/generator", getGeneratorForecast);
-
 
 export default router;

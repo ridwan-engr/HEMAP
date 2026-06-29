@@ -20,7 +20,7 @@
  * ============================================================
  */
 
-import { Grid } from "../../models/grid.js";
+import { Grid } from "../../models/Grid.js";
 
 
 

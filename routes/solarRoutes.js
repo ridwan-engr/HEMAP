@@ -15,7 +15,7 @@ import {
 
 import {
   requireAuth
-} from "../middleware/authMiddleware.js";
+} from "../middlewares/authMiddleware.js";
 
 const router = Router();
 

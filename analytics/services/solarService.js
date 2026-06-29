@@ -18,7 +18,7 @@
  * ============================================================
  */
 
-import { Solar } from "../../models/solar.js";
+import { SolarPlant } from "../../models/SolarPlant.js";
 
 import {
 

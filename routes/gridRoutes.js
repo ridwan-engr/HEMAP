@@ -19,11 +19,11 @@ import {
 
 import {
   requireAuth
-} from "../middleware/authMiddleware.js";
+} from "../middlewares/authMiddleware.js";
 
 import {
   requireFields
-} from "../middleware/validateRequest.js";
+} from "../middlewares/validateRequest.js";
 
 const router = Router();
 

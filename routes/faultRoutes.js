@@ -3,12 +3,14 @@ import { Router } from "express";
 import {
   createFault,
   getFaults,
-  resolveFault
+  getFault,
+  updateFaults,
+  deleteFault
 } from "../controllers/faultController.js";
 
 import {
   requireAuth
-} from "../middleware/authMiddleware.js";
+} from "../middlewares/authMiddleware.js";
 
 const router = Router();
 
@@ -27,7 +29,20 @@ router.post(
 router.patch(
   "/resolve/:id",
   requireAuth,
-  resolveFault
+  updateFaults
 );
+
+router.get(
+  "/:id",
+  requireAuth,
+  getFault
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteFault
+);
+
 
 export default router;

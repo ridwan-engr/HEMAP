@@ -45,8 +45,8 @@ const batterySchema =
     }
   );
 
-export const Battery =
-  mongoose.model(
-    "Battery",
-    batterySchema
-  );
+const Battery =
+  mongoose.models.Battery ||
+  mongoose.model("Battery", batterySchema);
+
+export default Battery;

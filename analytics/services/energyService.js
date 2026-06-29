@@ -1,354 +1,162 @@
 /**
  * ============================================================
  * HEMAP
- * Grid Analytics Service
+ * Energy Service
  *
- * Standards
- * ----------
- * IEEE 1159
- * IEC 61000
+ * Hybrid Energy Management Platform
+ *
+ * Central Energy Orchestration Engine
  *
  * Used By
  *
  * Dashboard
- * GridChart
- * GridGauge
  * Monitoring
  * Reports
+ * Forecast
  * Digital Twin
+ * Socket.IO
+ * Optimization Engine
  *
  * ============================================================
  */
 
-import { Grid } from "../../models/grid.js";
+import {
 
-
-
-/**
- * ============================================================
- * Dashboard Summary
- * ============================================================
- */
-
-export async function gridDashboard(){
-
-    const grids = await Grid.find();
-
-    if(!grids.length){
-
-        return{
-
-            totalSites:0,
-
-            averageVoltage:0,
-
-            averageFrequency:0,
-
-            totalImport:0,
-
-            totalExport:0,
-
-            availability:0
-
-        };
-
-    }
-
-    let voltage=0;
-
-    let frequency=0;
-
-    let importEnergy=0;
-
-    let exportEnergy=0;
-
-    let available=0;
-
-    grids.forEach(g=>{
-
-        voltage+=Number(g.voltage||0);
-
-        frequency+=Number(g.frequency||0);
-
-        importEnergy+=Number(g.importEnergy||0);
-
-        exportEnergy+=Number(g.exportEnergy||0);
-
-        if(g.available)
-
-            available++;
-
-    });
-
-    return{
-
-        totalSites:grids.length,
-
-        averageVoltage:Number(
-
-            (
-
-                voltage/grids.length
-
-            ).toFixed(2)
-
-        ),
-
-        averageFrequency:Number(
-
-            (
-
-                frequency/grids.length
-
-            ).toFixed(2)
-
-        ),
-
-        totalImport:Number(
-
-            importEnergy.toFixed(2)
-
-        ),
-
-        totalExport:Number(
-
-            exportEnergy.toFixed(2)
-
-        ),
-
-        availability:Number(
-
-            (
-
-                available/
-
-                grids.length
-
-                *
-
-                100
-
-            ).toFixed(2)
-
-        )
-
-    };
+    solarDashboard
 
 }
 
+from "./solarService.js";
 
+import {
 
-/**
- * ============================================================
- * Live Grid Status
- * ============================================================
- */
-
-export async function liveGridStatus(){
-
-    const grids = await Grid.find();
-
-    return grids.map(grid=>({
-
-        site:grid.siteName,
-
-        voltage:grid.voltage,
-
-        frequency:grid.frequency,
-
-        importEnergy:grid.importEnergy,
-
-        exportEnergy:grid.exportEnergy,
-
-        available:grid.available,
-
-        voltageStatus:
-
-            classifyVoltage(
-
-                grid.voltage
-
-            ),
-
-        frequencyStatus:
-
-            classifyFrequency(
-
-                grid.frequency
-
-            )
-
-    }));
+    batteryDashboard
 
 }
 
+from "./batteryService.js";
 
+import {
 
-/**
- * ============================================================
- * Voltage Classification
- * ============================================================
- */
-
-export function classifyVoltage(
-
-    voltage
-
-){
-
-    if(voltage>=210 && voltage<=240)
-
-        return "NORMAL";
-
-    if(voltage<210)
-
-        return "LOW";
-
-    return "HIGH";
+    generatorDashboard
 
 }
 
+from "./generatorService.js";
 
+import {
 
-/**
- * ============================================================
- * Frequency Classification
- * ============================================================
- */
-
-export function classifyFrequency(
-
-    frequency
-
-){
-
-    if(frequency>=49.5 && frequency<=50.5)
-
-        return "NORMAL";
-
-    if(frequency<49.5)
-
-        return "LOW";
-
-    return "HIGH";
+    gridDashboard
 
 }
 
+from "./gridService.js";
+
+import {
+
+    calculateEnergyReport
+
+}
+
+from "../calculations/energyBalance.js";
+
 
 
 /**
  * ============================================================
- * Voltage Trend
+ * Overall Energy Dashboard
  * ============================================================
  */
 
-export async function voltageTrend(){
+export async function energyDashboard(){
 
-    const grids=
+    const [
 
-        await Grid.find()
+        solar,
 
-        .sort({
+        battery,
 
-            createdAt:1
+        generator,
+
+        grid
+
+    ] = await Promise.all([
+
+        solarDashboard(),
+
+        batteryDashboard(),
+
+        generatorDashboard(),
+
+        gridDashboard()
+
+    ]);
+
+
+
+    const report =
+
+        calculateEnergyReport({
+
+            solar:
+
+                solar.acPower,
+
+            batteryDischarge:
+
+                battery.totalRemainingEnergy,
+
+            batteryCharge:0,
+
+            generator:
+
+                generator.totalGenerators
+
+                ?
+
+                generator.averageLoadFactor *
+
+                generator.totalGenerators
+
+                :
+
+                0,
+
+            gridImport:
+
+                grid.totalImport,
+
+            gridExport:
+
+                grid.totalExport,
+
+            load:
+
+                solar.acPower +
+
+                grid.totalImport +
+
+                generator.totalGenerators,
+
+            duration:1
 
         });
 
-    return grids.map(item=>({
 
-        date:item.createdAt,
-
-        voltage:item.voltage
-
-    }));
-
-}
-
-
-
-/**
- * ============================================================
- * Frequency Trend
- * ============================================================
- */
-
-export async function frequencyTrend(){
-
-    const grids=
-
-        await Grid.find()
-
-        .sort({
-
-            createdAt:1
-
-        });
-
-    return grids.map(item=>({
-
-        date:item.createdAt,
-
-        frequency:item.frequency
-
-    }));
-
-}
-
-
-
-/**
- * ============================================================
- * Import Export Summary
- * ============================================================
- */
-
-export async function importExportSummary(){
-
-    const grids=
-
-        await Grid.find();
-
-    let totalImport=0;
-
-    let totalExport=0;
-
-    grids.forEach(g=>{
-
-        totalImport+=
-
-            Number(g.importEnergy||0);
-
-        totalExport+=
-
-            Number(g.exportEnergy||0);
-
-    });
 
     return{
 
-        importEnergy:Number(
+        timestamp:new Date(),
 
-            totalImport.toFixed(2)
+        solar,
 
-        ),
+        battery,
 
-        exportEnergy:Number(
+        generator,
 
-            totalExport.toFixed(2)
+        grid,
 
-        ),
-
-        netImport:Number(
-
-            (
-
-                totalImport-
-
-                totalExport
-
-            ).toFixed(2)
-
-        )
+        energy:report
 
     };
 
@@ -358,47 +166,45 @@ export async function importExportSummary(){
 
 /**
  * ============================================================
- * Grid Availability
+ * Live Energy Flow
  * ============================================================
  */
 
-export async function gridAvailability(){
+export async function liveEnergyFlow(){
 
-    const grids=
+    const dashboard=
 
-        await Grid.find();
-
-    const available=
-
-        grids.filter(
-
-            g=>g.available
-
-        ).length;
+        await energyDashboard();
 
     return{
 
-        availability:Number(
+        solar:
 
-            (
+            dashboard.solar.acPower,
 
-                available/
+        battery:
 
-                grids.length
+            dashboard.battery.totalRemainingEnergy,
 
-                *
+        generator:
 
-                100
+            dashboard.generator.averageLoadFactor,
 
-            ).toFixed(2)
+        grid:
 
-        ),
+            dashboard.grid.totalImport,
 
-        unavailable:
+        load:
 
-            grids.length-
+            dashboard.energy.consumption,
 
-            available
+        balance:
+
+            dashboard.energy.balance,
+
+        status:
+
+            dashboard.energy.status
 
     };
 
@@ -408,33 +214,171 @@ export async function gridAvailability(){
 
 /**
  * ============================================================
- * Outage Summary
+ * Energy KPI
  * ============================================================
  */
 
-export async function outageSummary(){
+export async function energyKPI(){
 
-    const grids=
+    const dashboard=
 
-        await Grid.find();
-
-    let outages=0;
-
-    grids.forEach(g=>{
-
-        outages+=
-
-            Number(
-
-                g.outageCount||0
-
-            );
-
-    });
+        await energyDashboard();
 
     return{
 
-        outages
+        generation:
+
+            dashboard.energy.generation,
+
+        consumption:
+
+            dashboard.energy.consumption,
+
+        surplus:
+
+            dashboard.energy.balance,
+
+        renewable:
+
+            dashboard.energy.renewablePercentage,
+
+        ens:
+
+            dashboard.energy.energyNotSupplied
+
+    };
+
+}
+
+
+
+/**
+ * ============================================================
+ * Daily Energy Report
+ * ============================================================
+ */
+
+export async function dailyEnergyReport(){
+
+    const dashboard=
+
+        await energyDashboard();
+
+    return{
+
+        reportDate:
+
+            new Date(),
+
+        generation:
+
+            dashboard.energy.generation,
+
+        consumption:
+
+            dashboard.energy.consumption,
+
+        renewable:
+
+            dashboard.energy.renewablePercentage,
+
+        batterySOC:
+
+            dashboard.battery.averageSOC,
+
+        fuelConsumption:
+
+            dashboard.generator.totalFuel,
+
+        gridImport:
+
+            dashboard.grid.totalImport,
+
+        gridExport:
+
+            dashboard.grid.totalExport,
+
+        balance:
+
+            dashboard.energy.balance
+
+    };
+
+}
+
+
+
+/**
+ * ============================================================
+ * Digital Twin Snapshot
+ * ============================================================
+ */
+
+export async function digitalTwinSnapshot(){
+
+    const dashboard=
+
+        await energyDashboard();
+
+    return{
+
+        timestamp:
+
+            new Date(),
+
+        solar:dashboard.solar,
+
+        battery:dashboard.battery,
+
+        generator:dashboard.generator,
+
+        grid:dashboard.grid,
+
+        energy:dashboard.energy
+
+    };
+
+}
+
+
+
+/**
+ * ============================================================
+ * Optimization Inputs
+ * ============================================================
+ */
+
+export async function optimizationInputs(){
+
+    const dashboard=
+
+        await energyDashboard();
+
+    return{
+
+        renewableGeneration:
+
+            dashboard.solar.acPower,
+
+        batteryEnergy:
+
+            dashboard.battery.totalRemainingEnergy,
+
+        generatorCapacity:
+
+            dashboard.generator.totalGenerators,
+
+        gridEnergy:
+
+            dashboard.grid.totalImport,
+
+        demand:
+
+            dashboard.energy.consumption,
+
+        renewableFraction:
+
+            dashboard.energy.renewablePercentage
 
     };
 

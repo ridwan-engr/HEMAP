@@ -17,17 +17,17 @@
  * ==========================================================
  */
 
-import { Site } from "../../models/site.js";
+import { Site } from "../../models/Site.js";
 
-import { Solar } from "../../models/solar.js";
+import { SolarPlant } from "../../models/SolarPlant.js";
 
-import { Battery } from "../../models/battery.js";
+import  Battery  from "../../models/Battery.js";
 
-import { Generator } from "../../models/generator.js";
+import { Generator } from "../../models/Generator.js";
 
-import { Grid } from "../../models/grid.js";
+import { Grid } from "../../models/Grid.js";
 
-import { Fault } from "../../models/fault.js";
+import { FaultLog } from "../../models/FaultLog.js";
 
 import {
 

@@ -13,7 +13,7 @@
  * ============================================================
  */
 
-import { Battery } from "../models/Battery.js";
+import  Battery  from "../models/Battery.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {
 

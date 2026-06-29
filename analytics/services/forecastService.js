@@ -1,4 +1,4 @@
-import { Forecast } from "../models/Forecast.js";
+import { Forecast } from "../../models/Forecast.js";
 
 export async function createForecastRecord(data) {
   return await Forecast.create(data);
@@ -87,4 +87,92 @@ export function calculateR2(actual, predicted) {
       ssResidual / ssTotal
     ).toFixed(4)
   );
+}
+
+export async function forecastSummary(){
+
+    const forecasts = await Forecast.find()
+
+        .sort({
+
+            forecastDate:-1
+
+        })
+
+        .limit(20);
+
+    return forecasts;
+
+}
+
+export async function solarForecast(){
+
+    return await Forecast.find()
+
+        .select(
+
+            "forecastDate pvForecast confidenceLevel"
+
+        )
+
+        .sort({
+
+            forecastDate:1
+
+        });
+
+}
+
+export async function loadForecast(){
+
+    return await Forecast.find()
+
+        .select(
+
+            "forecastDate loadForecast"
+
+        )
+
+        .sort({
+
+            forecastDate:1
+
+        });
+
+}
+
+export async function batteryForecast(){
+
+    return await Forecast.find()
+
+        .select(
+
+            "forecastDate batterySOCForecast batteryAutonomy"
+
+        )
+
+        .sort({
+
+            forecastDate:1
+
+        });
+
+}
+
+export async function generatorForecast(){
+
+    return await Forecast.find()
+
+        .select(
+
+            "forecastDate generatorRuntimeForecast dieselForecast"
+
+        )
+
+        .sort({
+
+            forecastDate:1
+
+        });
+
 }

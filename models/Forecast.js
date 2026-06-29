@@ -1,4 +1,3 @@
-import { isNumber } from "lodash";
 import mongoose from "mongoose";
 
 const forecastSchema =

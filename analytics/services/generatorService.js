@@ -20,7 +20,7 @@
  * ============================================================
  */
 
-import { Generator } from "../../models/generator.js";
+import { Generator } from "../../models/Generator.js";
 
 import {
 
