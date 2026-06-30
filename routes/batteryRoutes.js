@@ -11,7 +11,8 @@ import {
   getBatteryHealth,
   getBatteryRuntime,
   getBatteryEfficiency,
-  getBatterySite
+  getBatterySite,
+  updateBattery
 } from "../controllers/batteryController.js";
 
 import {
@@ -30,6 +31,24 @@ router.post(
   "/",
   requireAuth,
   createBattery
+);
+
+router.get(
+  "/:id",
+  requireAuth,
+  getBattery
+);
+
+router.patch(
+  "/:id",
+  requireAuth,
+  updateBattery
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  deleteBattery
 );
 
 router.get("/", getBatteryDashboard);

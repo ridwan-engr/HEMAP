@@ -52,7 +52,7 @@ router.delete(
   deleteGenerator
 );
 
-router.get("/", getGeneratorDashboard);
+/*router.get("/", getGeneratorDashboard);
 
 router.get("/live", getLiveGenerator);
 
@@ -66,6 +66,6 @@ router.get("/maintenance", getMaintenanceReport);
 
 router.get("/emissions", getGeneratorEmissions);
 
-router.get("/site/:siteName", getGeneratorSite);
+router.get("/site/:siteName", getGeneratorSite); */
 
 export default router;

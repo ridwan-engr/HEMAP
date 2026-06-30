@@ -10,14 +10,13 @@ const siteSchema = new mongoose.Schema(
 
     location: {
       type: String,
-      required: true,
-      trim: true
+      default: ""
     },
 
-    status:{
-        type:String,
-        trim:true,
-        default:"Active"
+    status: {
+      type: String,
+      trim: true,
+      default: "Active"
     },
 
     latitude: {
